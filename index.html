@@ -1,0 +1,232 @@
+<html>
+<!--
+
+
+
+  -->
+<head><title></title>
+<style>
+body{
+  user-select: none;
+  font-size: 10px;
+}
+body,textarea{
+  background-color:#17181c;
+  background-color:#e8e7e3;
+  
+  /* background-color: #e8e7e3; */
+  /* background-color: #777; */
+  color:#737270;
+  color:#17181c;
+
+  font-family:monospace;}body{padding:0;margin:0;cursor:default;}
+
+span{margin-left:8px;}
+canvas{border:0;}
+
+textarea{font-size:6pt;border:1px solid #0f0f12;background-color:#131417;margin:8px;}
+
+canvas {  
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 1px solid grey;
+  background: #fff;
+}
+
+#ui{
+  opacity:0.15;
+  mix-blend-mode: darken;
+  position:absolute;
+  top:0;
+  left:0;
+  cursor: url(img/pencil.png) 0 15, auto;
+  background: #fff;
+  width: 512px;
+  height: 512px;
+}
+
+#cv{
+  /* background: green; */
+  width: 512px;
+  height: 512px;
+
+}
+
+#cv2{
+  display:none;
+  margin:8px;
+}
+
+/* //////////////////// */
+
+
+.butt {
+  position: relative;
+  display: inline-block;
+  cursor:pointer;
+  border: 2px solid #17181ca3;;
+  border-radius: 5px;
+  padding: 5px;
+  /* background-color: #ccc; */
+  margin:4px 2px;
+  font-weight:bold;
+}
+
+span .tip {
+  border: 2px solid #17181c;;
+
+  visibility: hidden;
+  width: 120px;
+  background-color: #ccc;
+  color: #000;
+  /* color: #fff; */
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 155%;
+  left: 100%;
+  /* right:100%; */
+  margin-left: -60px;
+  opacity: 0;
+  /* transition: 0.2s; */
+}
+
+/* span .tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+} */
+
+span:hover .tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+</style>
+
+
+
+</head>
+<body>
+
+
+<canvas id="ui"></canvas>
+<canvas id="cv"></canvas><br>
+
+<!-- <span id="coords">.</span> -->
+
+<canvas id="cv2"></canvas>
+<br>
+<span>  frame</span> <span id="frameNumber">1/1</span>
+| zoom:<span id="zoomlevel"></span>
+  
+
+<br>
+
+
+
+<!--
+<span class="butt" onclick="Anim.play()">
+  [play]
+  <span class="tip">Space</span>
+</span>
+
+<span class="butt" onclick="Anim.stop()">
+  [stop]
+  <span class="tip">Space</span>
+</span>
+-->
+<span class="butt" onclick="Anim.playStop()">
+  play/stop
+  <span class="tip">[Space]</span>
+</span>
+
+<!-- <br> -->
+
+<span class="butt" onclick="Anim.prevFrame()">prev<span class="tip">[,] / [&#8592]</span>
+</span><span class="butt" onclick="Anim.nextFrame()">
+  next
+  <span class="tip">[.] / [&#8594]</span>
+</span>
+
+<!-- <br> -->
+
+<span class="butt" onclick="Anim.firstFrame()">
+  first
+</span><span class="butt" onclick="Anim.lastFrame()">
+  last
+</span>
+
+<br>
+
+<span class="butt" onclick="Anim.copyFrame()">
+  copy
+  <span class="tip">[C]</span>
+</span><span class="butt" onclick="Anim.pasteFrame()">
+  paste
+  <span class="tip">[V]</span>
+</span>
+
+<!-- <br> -->
+
+<span class="butt" onclick="Anim.insertFrame()">
+  insert
+  <span class="tip">[Ins] / [I]</span>
+</span><span class="butt" onclick="Anim.deleteFrame()">
+  delete
+  <span class="tip">[Del]</span>
+</span>
+
+<br>
+
+<span class="butt" onclick="zoomIn()">
+  zoom+
+  <span class="tip">[&#8593] or [+] or Shift+WheelUp</span>
+</span><span class="butt" onclick="zoomOut()">
+  zoom-
+  <span class="tip">[&#8595] or [-] or Shift+WheelDown</span>
+</span>
+
+<!-- <br> -->
+
+<span class="butt" onclick="Anim.userFramerate()">set fps</span>
+<!-- <br> -->
+<span class="butt" onclick="Anim.exportGif()">make gif</span>
+<div id="gifOutput"></div>
+
+<!-- <br> -->
+<span class="butt" onclick="Anim.newAnimation()">new animation</span> 
+<br>
+<br>
+<!-- <span id="helpToggle" onclick="toggleHelp()">[show help]</span> -->
+<div id="help">
+<span>use the arrow keys to move thru time</span>
+<br>
+<span>new frames added automatically</span>
+</div>
+
+<br>
+
+
+<script src="lib/gif.js"> </script>
+<script src="ezt.js"> </script>
+
+
+
+<!-- <script src="base64.js"> </script> -->
+
+
+<a id="link" href="#"></a>
+
+</body>
+</html>
