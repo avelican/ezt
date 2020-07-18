@@ -1,7 +1,9 @@
-var GLOBAL_zoom = 4; // screen pixels per image pixel
+'use strict'
+
+var GLOBAL_zoom = 4 // screen pixels per image pixel
 
 const $CANVAS = document.getElementById('cv') as HTMLCanvasElement
-$CANVAS.width = 128; 
+$CANVAS.width = 128
 $CANVAS.height = $CANVAS.width
 const CONTEXT = $CANVAS.getContext('2d') as CanvasRenderingContext2D
 
@@ -47,19 +49,19 @@ class Anim {
 	static savedPtr = 0
 
 	static setFramerate(framerate: number) {
-		this.fps = framerate;
-		this.frameInterval = 1000 / framerate;
+		this.fps = framerate
+		this.frameInterval = 1000 / framerate
 	}
 	
 	static userFramerate() {
-		var fr = Number(prompt("framerate is currently " + this.fps + "\nset new rate?"))
+		var fr = Number(prompt('framerate is currently ' + this.fps + '\nset new rate?'))
 		if (!fr) { return }
 		this.setFramerate(fr)
 	}
 
 	static showFrameNumber() {
 		var frameNum = `${this.ptr + 1}/${this.Frames.length}`;
-		(document.getElementById("frameNumber") as HTMLSpanElement).innerHTML = frameNum
+		(document.getElementById('frameNumber') as HTMLSpanElement).innerHTML = frameNum
 	}
 
 	static async drawCurrentFrame() { //console.log(ptr)
@@ -69,46 +71,46 @@ class Anim {
 		// Ghost prev frame
 		UI_CONTEXT.clearRect(0,0,$UI.width, $UI.height)
 		if(this.ptr > 0){
-			UI_CONTEXT.putImageData(this.Frames[this.ptr-1],0,0); // GHOSTING
+			UI_CONTEXT.putImageData(this.Frames[this.ptr-1],0,0) // GHOSTING
 		}
 		// Ghost next frame
 		if(this.ptr < this.Frames.length - 1){ 
-			UI_CONTEXT.globalAlpha = 0.3;
-			UI_CONTEXT.drawImage( await createImageBitmap( this.Frames[this.ptr+1] ),0,0); 
-			UI_CONTEXT.globalAlpha = 1;
+			UI_CONTEXT.globalAlpha = 0.3
+			UI_CONTEXT.drawImage( await createImageBitmap( this.Frames[this.ptr+1] ),0,0)
+			UI_CONTEXT.globalAlpha = 1
 		}
 		this.showFrameNumber()
 	}
 
 	static dupeFrame() {
 		if (this.ptr == this.Frames.length - 1) {
-			this.copyFrame(); this.nextFrame(); this.pasteFrame();
+			this.copyFrame(); this.nextFrame(); this.pasteFrame()
 		} else {
-			this.copyFrame(); this.nextFrame(); this.insertFrame(); this.pasteFrame();
+			this.copyFrame(); this.nextFrame(); this.insertFrame(); this.pasteFrame()
 		}
 	}
 
 	static deleteFrame() {
-		console.log("delete frame")
+		console.log('delete frame')
 		if (this.Frames.length == 1) {
-			console.log("deleting first frame")
+			console.log('deleting first frame')
 			this.newAnimation()
 			return
 		}
 		var isLastFrame = false
 
-		console.log("ptr:" + this.ptr);
+		console.log('ptr:' + this.ptr)
 		if (this.ptr == this.Frames.length - 1 && this.ptr > 0) {
 			isLastFrame = true
-			console.log("deleting last frame")
+			console.log('deleting last frame')
 		}
-		this.Frames.splice(this.ptr, 1);
+		this.Frames.splice(this.ptr, 1)
 		if (isLastFrame) { this.ptr-- }
 		this.drawCurrentFrame()
 	}
 
 	static prevFrame() {
-		console.log("previous frame")
+		console.log('previous frame')
 		if (this.ptr == 0) { return }
 		this.writeCanvasToFrame()
 		this.ptr--
@@ -117,7 +119,7 @@ class Anim {
 
 	static nextFrame(){
 		console.log('nextFrame')
-		this.writeCanvasToFrame();
+		this.writeCanvasToFrame()
 		this.ptr++
 		if (this.ptr == this.Frames.length) {
 			// new frame
@@ -160,6 +162,8 @@ class Anim {
 		this.Frames = []
 		clearCanvas()
 		this.writeCanvasToFrame()
+		this.drawCurrentFrame()
+		this.showFrameNumber()
 	}
 
 	static writeCanvasToFrame() {
@@ -190,7 +194,7 @@ class Anim {
 	static play() {
 		if (this.Frames.length == 1) { return }
 
-		this.savedPtr = this.ptr;
+		this.savedPtr = this.ptr
 		this.playing = true
 		this.ptr = 0
 		// this.drawCurrentFrame()
@@ -234,22 +238,22 @@ class Anim {
 	}
 
 	static exportGif() {
-		// @ts-ignore
-		var gif = new GIF({
+		// @ts-ignore // TODO better way to fix this?
+		var gif = new GIF({ // eslint-disable-line 
 			workers: 2,
 			//quality: 1,
 			quality: 1,
 			width: $CANVAS.width,
 			height: $CANVAS.height
-		});
+		})
 	
-		this.savedPtr = this.ptr;
+		this.savedPtr = this.ptr
 		this.ptr = 0
 	
 		while (this.ptr < this.Frames.length) {
 			this.drawCurrentFrame()
 			gif.addFrame(CONTEXT, { copy: true, delay: this.frameInterval })
-			this.ptr++;
+			this.ptr++
 		}
 	
 		var blobb
@@ -265,18 +269,18 @@ class Anim {
 			//img.src="data:image/gif;base64,"+Base64.encode(blob)
 	
 			var displayGif = function (gifDataEncoded: string) {
-				DOM.gifOutput.innerHTML = "";
-				var img = document.createElement("IMG") as HTMLImageElement
+				DOM.gifOutput.innerHTML = ''
+				var img = document.createElement('IMG') as HTMLImageElement
 				img.src = gifDataEncoded
 				DOM.gifOutput.appendChild(img)
 			}
 	
-			blobEncoder(blob, displayGif);
+			blobEncoder(blob, displayGif)
 	
-		});
+		})
 	
 		gif.render()
-		return blobb;
+		return blobb
 	}
 
 }
@@ -305,9 +309,9 @@ class Input {
 	static mouseUp(ev: MouseEvent) {
 		Anim.writeCanvasToFrame()
 		if (ev.button == 0) {
-			Input.pressedLeft = false;
+			Input.pressedLeft = false
 		} else if (ev.button == 2) {
-			Input.pressedRight = false;
+			Input.pressedRight = false
 		}
 	}
 
@@ -328,8 +332,6 @@ class Input {
 			case 'KeyI': case 'Insert': Anim.insertFrame(); break
 			case 'KeyC': Anim.copyFrame(); break
 			case 'KeyV': Anim.pasteFrame(); break
-			case 'KeyV': Anim.pasteFrame(); break
-			case 'KeyV': Anim.pasteFrame(); break
 			case 'Equal': case 'ArrowUp': case 'NumpadAdd': zoomIn(); break
 			case 'Minus': case 'ArrowDown': case 'NumpadSubtract': zoomOut(); break
 			case 'Space': Anim.playStop(); break
@@ -338,7 +340,7 @@ class Input {
 	}
 
 	static zoomEvent(e: WheelEvent) {
-		 if (!e.shiftKey) return
+		if (!e.shiftKey) return
 		e.preventDefault() // stop scrolling and zooming
 		console.log(e)
 		if (e.deltaY < 0) {
@@ -354,8 +356,8 @@ function clearCanvas() {
 	
 
 	// CONTEXT.clearRect(0, 0, $CANVAS.width, $CANVAS.height);
-	CONTEXT.fillStyle = "rgba(255,255,255,1)"
-	CONTEXT.fillRect(0, 0, $CANVAS.width, $CANVAS.height);
+	CONTEXT.fillStyle = 'rgba(255,255,255,1)'
+	CONTEXT.fillRect(0, 0, $CANVAS.width, $CANVAS.height)
 	Anim.writeCanvasToFrame()
 	// cx.clearRect(0, 0, width * zoom, height * zoom)
 
@@ -374,7 +376,7 @@ function screenToImageY(mouseY: number){
 // TODO I am a bit confused about canvas coords vs screen-canvas coords (zoomed)
 function startDraw(e: MouseEvent) {
 
-	const rect = $CANVAS.getBoundingClientRect()
+	// const rect = $CANVAS.getBoundingClientRect()
 	Canvas.X = screenToImageX(e.clientX)
 	Canvas.Y = screenToImageY(e.clientY)
 	// console.log(Canvas.X, Canvas.Y)
@@ -386,8 +388,8 @@ function startDraw(e: MouseEvent) {
 	if (Input.pressedRight)
 		setPixel(false)
 	
-	Canvas.lastX = Canvas.X;
-	Canvas.lastY = Canvas.Y;
+	Canvas.lastX = Canvas.X
+	Canvas.lastY = Canvas.Y
 }
 function continueDraw(e: MouseEvent) {
 	// console.log('continueDraw')
@@ -406,19 +408,19 @@ function continueDraw(e: MouseEvent) {
 		line(false, Canvas.lastX, Canvas.lastY, Canvas.X, Canvas.Y)
 	}
 
-	Canvas.lastX = Canvas.X;
-	Canvas.lastY = Canvas.Y;
+	Canvas.lastX = Canvas.X
+	Canvas.lastY = Canvas.Y
 
 }
 
 function setPixel(isBlack: boolean) {
 	// console.log('setpixel', isBlack)
 	CONTEXT.fillStyle = (isBlack) ? 'black' : 'white'
-	CONTEXT.fillRect(Canvas.X, Canvas.Y, 1, 1);
+	CONTEXT.fillRect(Canvas.X, Canvas.Y, 1, 1)
 }
 
 function zoomIn() {
-	if (GLOBAL_zoom < 128) { GLOBAL_zoom = GLOBAL_zoom * 2; }
+	if (GLOBAL_zoom < 128) { GLOBAL_zoom = GLOBAL_zoom * 2 }
 	updateZoom()
 }
 
@@ -439,24 +441,28 @@ function updateZoom() {
 
 	Anim.drawCurrentFrame()
 }
-function UNUSED_savePNG() {
-	Anim.drawCurrentFrame();
-	var link = document.getElementById('link') as HTMLLinkElement; // todo this can't be the best way to download a file???
-	link.setAttribute('download', 'MintyPaper.png');
-	link.setAttribute('href', $CANVAS.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-	link.click();
 
-	/*
-		var image = cv.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
-		console.log(image)
-		window.location.href=image
-		*/
-}
+// might be handy later:
+
+// function UNUSED_savePNG() {
+// 	Anim.drawCurrentFrame()
+// 	var link = document.getElementById('link') as HTMLLinkElement // todo this can't be the best way to download a file???
+// 	link.setAttribute('download', 'MintyPaper.png')
+// 	link.setAttribute('href', $CANVAS.toDataURL('image/png').replace('image/png', 'image/octet-stream'))
+// 	link.click()
+
+// 	/*
+// 		var image = cv.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+// 		console.log(image)
+// 		window.location.href=image
+// 		*/
+// }
+
 function line(isBlack: boolean, x1: number, y1: number, x2: number, y2: number) {
 	// console.log('line', x1, y1, x2, y2)
-	var xf, yf;
-	Canvas.X = xf = x1;
-	Canvas.Y = yf = y1;
+	var xf, yf
+	Canvas.X = xf = x1
+	Canvas.Y = yf = y1
 	setPixel(isBlack)
 	// always draw 1st pixel
 
@@ -478,16 +484,16 @@ function line(isBlack: boolean, x1: number, y1: number, x2: number, y2: number) 
 		Canvas.X = Math.floor(xf)
 		Canvas.Y = Math.floor(yf)
 		// console.log('filling in ' + x + ',' + y)
-		setPixel(isBlack);
+		setPixel(isBlack)
 	}
 }
 
 function blobEncoder(blob: Blob, callBack: Function) {
 	console.log(typeof callBack)
-	var reader = new FileReader();
-	reader.readAsDataURL(blob);
+	var reader = new FileReader()
+	reader.readAsDataURL(blob)
 	reader.onloadend = function () {
-		var base64data = reader.result;
+		var base64data = reader.result
 		//console.log(base64data);
 		callBack(base64data)
 	}
@@ -495,15 +501,15 @@ function blobEncoder(blob: Blob, callBack: Function) {
 
 ///////////
 $UI.addEventListener('contextmenu', (e) => e.preventDefault(), false)
-$UI.addEventListener("mousedown", Input.mouseDown, false)
-window.addEventListener("mouseup", Input.mouseUp, false)
-window.addEventListener("mousemove", Input.mouseMove, false)
+$UI.addEventListener('mousedown', Input.mouseDown, false)
+window.addEventListener('mouseup', Input.mouseUp, false)
+window.addEventListener('mousemove', Input.mouseMove, false)
 
 // fun fact: There is also a "scroll" event but that requires the window to actually scroll
-$UI.addEventListener("wheel", Input.zoomEvent, false)
-document.addEventListener("wheel", Input.zoomEvent, false)
+$UI.addEventListener('wheel', Input.zoomEvent, false)
+document.addEventListener('wheel', Input.zoomEvent, false)
 
-window.addEventListener("keydown", Input.handleKeyboard, true)
+window.addEventListener('keydown', Input.handleKeyboard, true)
 
 Anim.newAnimation()
 updateZoom()
