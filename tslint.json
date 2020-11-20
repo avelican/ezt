@@ -4,8 +4,8 @@
 	    "max-line-length": {
 		   "options": [120]
 	    },
-	    "one-variable-per-declaration": false,
 	    "max-classes-per-file": false,
+	    "one-variable-per-declaration": false,
 	    "semicolon": [true, "always"],
 	    "no-console": false,
 
